@@ -1,4 +1,4 @@
-package com.example.fart_gun
+package ca.iamasif.fart_gun
 
 import io.flutter.embedding.android.FlutterActivity
 
