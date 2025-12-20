@@ -5,6 +5,7 @@ import 'package:fart_gun/const.dart';
 import 'package:fart_gun/widgets/denim/denim_background.dart';
 import 'package:fart_gun/widgets/denim/denim_stitched_border.dart';
 import 'package:fart_gun/widgets/denim/stitched_container.dart';
+import 'package:fart_gun/widgets/gun_widget.dart';
 import 'package:fart_gun/widgets/knob_selector.dart';
 import 'package:fart_gun/widgets/red_button/pressableRedButton.dart';
 import 'package:fart_gun/widgets/sound_type_button.dart';
@@ -148,12 +149,14 @@ class _FartGunHomeState extends State<FartGunHome> with SingleTickerProviderStat
   }
 
   void _triggerSound() async {
+    //Button tap sound
+    await player.play(AssetSource(tapSoundPath));
     // 1. Animate Button
     await _controller.forward();
     await _controller.reverse();
 
     // 2. Play Sound (Simulated)
-    String soundType = isFartMode ? "FART" : "BURP";
+    await Future.delayed(const Duration(milliseconds: 150));
     await player.play(AssetSource(isFartMode ? selectedFartSound : selectedBurpSound));
     // VISUAL CUE since we don't have real audio files loaded
     ScaffoldMessenger.of(context).showSnackBar(
@@ -387,21 +390,15 @@ class _FartGunHomeState extends State<FartGunHome> with SingleTickerProviderStat
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             // 1. The "Gun" Visual (Placeholder)
-                            Image.asset(
-                              fartGunImagePath, // Generic toy gun icon
-                              height: 120,
-                              // color: Colors.white,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  const Icon(Icons.toys, size: 100, color: Colors.white),
-                            ),
+                            GunWidget(triggerValue: triggerCount),
 
                             // 2. Mode Switcher (Fart vs Burp)
 
                             // Trigger Counter Text
-                            Text(
-                              "Triggers: ${10 - triggerCount}",
-                              style: GoogleFonts.robotoMono(color: Colors.white70, fontWeight: FontWeight.bold),
-                            ),
+                            // Text(
+                            //   "Triggers: ${10 - triggerCount}",
+                            //   style: GoogleFonts.robotoMono(color: Colors.white70, fontWeight: FontWeight.bold),
+                            // ),
                           ],
                         ),
                       ),

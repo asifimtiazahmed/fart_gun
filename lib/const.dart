@@ -8,6 +8,7 @@ final Color denimFabricShadeColor = const Color(0xFF244A9A);
 //
 
 final Color stitchColor = const Color(0xFFE8A631);
+final Color brownColor = const Color(0xFF7C4700);
 final Color unSelectedButtonColor = const Color(0xFF91BAD0);
 final Color selectedButtonColor = const Color(0xFF5081AC);
 final Color greenFartColor = const Color(0XFFB9D54A);
