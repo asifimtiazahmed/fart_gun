@@ -8,6 +8,7 @@ import 'package:fart_gun/widgets/denim/stitched_container.dart';
 import 'package:fart_gun/widgets/knob_selector.dart';
 import 'package:fart_gun/widgets/red_button/pressableRedButton.dart';
 import 'package:fart_gun/widgets/sound_type_button.dart';
+import 'package:fart_gun/widgets/update_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -42,13 +43,10 @@ class _FartGunHomeState extends State<FartGunHome> with SingleTickerProviderStat
   @override
   void initState() {
     super.initState();
+    init();
     try {
       fartKnobValue = localStorageService.getInt(fartKnobValueKey);
       burpKnobValue = localStorageService.getInt(burpKnobValueKey);
-      getBurpDescription(burpKnobValue);
-      getFartDescription(fartKnobValue);
-      selectedFartSound = 'farts/fart$fartKnobValue.mp3';
-      selectedBurpSound = 'burps/burp$burpKnobValue.mp3';
     } catch (e) {
       AppLogger.log(e.toString());
     }
@@ -67,33 +65,42 @@ class _FartGunHomeState extends State<FartGunHome> with SingleTickerProviderStat
     super.dispose();
   }
 
+  void init() {
+    setState(() {
+      getBurpDescription(burpKnobValue);
+      getFartDescription(fartKnobValue);
+      selectedFartSound = 'farts/fart$fartKnobValue.mp3';
+      selectedBurpSound = 'burps/burp$burpKnobValue.mp3';
+    });
+  }
+
   // --- Logic Methods ---
   String getFartDescription(int value) {
     String desc = '';
     switch (value) {
       case 1:
-        desc = 'Fart 1';
+        desc = 'little stink';
         break;
       case 2:
-        desc = 'Fart 2';
+        desc = 'pressure fart';
         break;
       case 3:
-        desc = 'Fart 3';
+        desc = 'wet stinky';
         break;
       case 4:
-        desc = 'Fart 3';
+        desc = 'heavy stink';
         break;
       case 5:
-        desc = 'Fart 3';
+        desc = 'toilet wet poopy';
         break;
       case 6:
-        desc = 'Fart 3';
+        desc = 'poopy pants';
         break;
       case 7:
-        desc = 'Fart 3';
+        desc = 'long and skinny';
         break;
       case 0:
-        desc = 'Fart 3';
+        desc = 'let it riiiip';
         break;
       default:
         desc = '- not selected -';
@@ -111,28 +118,28 @@ class _FartGunHomeState extends State<FartGunHome> with SingleTickerProviderStat
     String desc = '';
     switch (value) {
       case 1:
-        desc = 'Burp 1';
+        desc = 'Baab!';
         break;
       case 2:
-        desc = 'Burp 2';
+        desc = 'gassy burp';
         break;
       case 3:
-        desc = 'Burp 3';
+        desc = 'foodie burp';
         break;
       case 4:
-        desc = 'Burp 4';
+        desc = 'gasping burp';
         break;
       case 5:
-        desc = 'Burp 5';
+        desc = 'addictive burp';
         break;
       case 6:
-        desc = 'Burp 6';
+        desc = 'satiated burp';
         break;
       case 7:
-        desc = 'Burp 7';
+        desc = 'shorty';
         break;
       case 0:
-        desc = 'Burp 0';
+        desc = 'Glug burp';
         break;
       default:
         desc = '- not selected -';
@@ -170,6 +177,9 @@ class _FartGunHomeState extends State<FartGunHome> with SingleTickerProviderStat
 
     if (triggerCount % 10 == 0) {
       _showInterstitialAd();
+      setState(() {
+        triggerCount = 0;
+      });
     }
   }
 
@@ -204,217 +214,219 @@ class _FartGunHomeState extends State<FartGunHome> with SingleTickerProviderStat
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      //TITLE
-      appBar: AppBar(
-        backgroundColor: themeYellow,
-        surfaceTintColor: themeYellow,
-        shadowColor: Colors.black,
-        elevation: 4.0,
-        title: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "THE ",
-                style: GoogleFonts.luckiestGuy(
-                  fontSize: 40,
-                  color: denimBlue,
-                  shadows: [Shadow(offset: const Offset(2, 2), color: stitchColor, blurRadius: 2)],
-                ),
-              ),
-              Text(
-                "FART",
-                style: GoogleFonts.luckiestGuy(
-                  fontSize: 40,
-                  color: Colors.green,
-                  shadows: [Shadow(offset: const Offset(2, 2), color: Colors.black26, blurRadius: 2)],
-                ),
-              ),
-              Text(
-                " GUN",
-                style: GoogleFonts.luckiestGuy(
-                  fontSize: 40,
-                  color: denimBlue,
-                  shadows: [Shadow(offset: const Offset(2, 2), color: stitchColor, blurRadius: 2)],
-                ),
-              ),
-            ],
-          ),
-        ),
-        centerTitle: true,
-      ),
-      body: DenimBackground(
-        child: DenimStitchedBorder(
-          topPadding: 15,
-          bottomPadding: 15,
-          leftPadding: 15,
-          rightPadding: 15,
-          child: SizedBox(
-            height: height,
-            width: width,
-            child: Column(
+    return AppUpdateBanner(
+      child: Scaffold(
+        //TITLE
+        appBar: AppBar(
+          backgroundColor: themeYellow,
+          surfaceTintColor: themeYellow,
+          shadowColor: Colors.black,
+          elevation: 4.0,
+          title: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20.0),
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    //             --- MAIN CONTENT AREA (Jeans Background) ---
-                    //BUTTON SELECTOR FARTS/BURP
-                    StitchedContainer(
-                      padding: EdgeInsets.fromLTRB(0, 8, 8, 8),
-
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: themeYellow,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [shadow, shadow2],
-                        ),
-                        height: height * 0.5,
-                        width: width * 0.4, //30%
-                        child: FittedBox(
-                          fit: BoxFit.contain,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      SoundTypeButton(
-                                        onPressed: () {
-                                          _switchMode(true);
-                                        },
-                                        imagePath: fartImagePath,
-                                        backgroundColor: isFartMode ? selectedButtonColor : unSelectedButtonColor,
-                                        buttonText: 'Farts',
-                                      ),
-                                      const SizedBox(width: 30),
-                                      SizedBox(
-                                        width: 60,
-                                        height: 60,
-                                        child: FittedBox(
-                                          fit: BoxFit.contain,
-                                          child: StepKnob(
-                                            value: fartKnobValue,
-                                            onChanged: (fartSelected) {
-                                              setState(() {
-                                                fartKnobValue = fartSelected;
-                                                selectedFartSound = 'farts/fart$fartSelected.mp3';
-                                                fartDescription = getFartDescription(fartSelected);
-                                                localStorageService.setInt(fartKnobValueKey, fartSelected);
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text('Fart Loaded: $fartDescription', style: GoogleFonts.luckiestGuy(fontSize: 15)),
-                                ],
-                              ),
-
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      SoundTypeButton(
-                                        onPressed: () {
-                                          _switchMode(false);
-                                        },
-                                        imagePath: burpImagePath,
-                                        backgroundColor: isFartMode ? unSelectedButtonColor : selectedButtonColor,
-                                        buttonText: 'Burps',
-                                      ),
-                                      const SizedBox(width: 30),
-                                      SizedBox(
-                                        width: 60,
-                                        height: 60,
-                                        child: FittedBox(
-                                          fit: BoxFit.contain,
-                                          child: StepKnob(
-                                            value: burpKnobValue,
-                                            onChanged: (burpSelected) {
-                                              setState(() {
-                                                burpKnobValue = burpSelected;
-                                                selectedBurpSound = 'burps/burp$burpSelected.mp3';
-                                                burpDescription = getBurpDescription(burpSelected);
-                                                localStorageService.setInt(burpKnobValueKey, burpSelected);
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text('Burp Loaded: $burpDescription', style: GoogleFonts.luckiestGuy(fontSize: 15)),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    //THE FART GUN
-                    Container(
-                      height: MediaQuery.of(context).size.height * 0.4,
-                      width: MediaQuery.of(context).size.width * 0.3,
-                      margin: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          // 1. The "Gun" Visual (Placeholder)
-                          Image.asset(
-                            fartGunImagePath, // Generic toy gun icon
-                            height: 120,
-                            // color: Colors.white,
-                            errorBuilder: (context, error, stackTrace) =>
-                                const Icon(Icons.toys, size: 100, color: Colors.white),
-                          ),
-
-                          // 2. Mode Switcher (Fart vs Burp)
-
-                          // Trigger Counter Text
-                          Text(
-                            "Triggers: $triggerCount",
-                            style: GoogleFonts.robotoMono(color: Colors.white70, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // 3. The Wacky Trigger Button
-                    PressableRedButton(size: 120, onPressed: _triggerSound),
-                  ],
+                Text(
+                  "THE ",
+                  style: GoogleFonts.luckiestGuy(
+                    fontSize: 40,
+                    color: denimBlue,
+                    shadows: [Shadow(offset: const Offset(2, 2), color: stitchColor, blurRadius: 2)],
+                  ),
                 ),
-
-                // --- BANNER AD PLACEHOLDER ---
+                Text(
+                  "FART",
+                  style: GoogleFonts.luckiestGuy(
+                    fontSize: 40,
+                    color: Colors.green,
+                    shadows: [Shadow(offset: const Offset(2, 2), color: Colors.black26, blurRadius: 2)],
+                  ),
+                ),
+                Text(
+                  " GUN",
+                  style: GoogleFonts.luckiestGuy(
+                    fontSize: 40,
+                    color: denimBlue,
+                    shadows: [Shadow(offset: const Offset(2, 2), color: stitchColor, blurRadius: 2)],
+                  ),
+                ),
               ],
             ),
           ),
+          centerTitle: true,
         ),
-      ),
-      bottomNavigationBar: FloatingActionButton(
-        onPressed: () {},
-        child: Container(
-          height: 60,
-          //width: 150,
-          color: Colors.black,
-          child: const Center(
-            child: Text(
-              "BANNER AD SPACE",
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        body: DenimBackground(
+          child: DenimStitchedBorder(
+            topPadding: 15,
+            bottomPadding: 15,
+            leftPadding: 15,
+            rightPadding: 15,
+            child: SizedBox(
+              height: height,
+              width: width,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      //             --- MAIN CONTENT AREA (Jeans Background) ---
+                      //BUTTON SELECTOR FARTS/BURP
+                      StitchedContainer(
+                        padding: EdgeInsets.fromLTRB(0, 8, 8, 8),
+
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: themeYellow,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [shadow, shadow2],
+                          ),
+                          height: height * 0.5,
+                          width: width * 0.4, //30%
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        SoundTypeButton(
+                                          onPressed: () {
+                                            _switchMode(true);
+                                          },
+                                          imagePath: fartImagePath,
+                                          backgroundColor: isFartMode ? selectedButtonColor : unSelectedButtonColor,
+                                          buttonText: 'Farts',
+                                        ),
+                                        const SizedBox(width: 30),
+                                        SizedBox(
+                                          width: 60,
+                                          height: 60,
+                                          child: FittedBox(
+                                            fit: BoxFit.contain,
+                                            child: StepKnob(
+                                              value: fartKnobValue,
+                                              onChanged: (fartSelected) {
+                                                setState(() {
+                                                  fartKnobValue = fartSelected;
+                                                  selectedFartSound = 'farts/fart$fartSelected.mp3';
+                                                  fartDescription = getFartDescription(fartSelected);
+                                                  localStorageService.setInt(fartKnobValueKey, fartSelected);
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Text('Fart Loaded: $fartDescription', style: GoogleFonts.luckiestGuy(fontSize: 15)),
+                                  ],
+                                ),
+
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        SoundTypeButton(
+                                          onPressed: () {
+                                            _switchMode(false);
+                                          },
+                                          imagePath: burpImagePath,
+                                          backgroundColor: isFartMode ? unSelectedButtonColor : selectedButtonColor,
+                                          buttonText: 'Burps',
+                                        ),
+                                        const SizedBox(width: 30),
+                                        SizedBox(
+                                          width: 60,
+                                          height: 60,
+                                          child: FittedBox(
+                                            fit: BoxFit.contain,
+                                            child: StepKnob(
+                                              value: burpKnobValue,
+                                              onChanged: (burpSelected) {
+                                                setState(() {
+                                                  burpKnobValue = burpSelected;
+                                                  selectedBurpSound = 'burps/burp$burpSelected.mp3';
+                                                  burpDescription = getBurpDescription(burpSelected);
+                                                  localStorageService.setInt(burpKnobValueKey, burpSelected);
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Text('Burp Loaded: $burpDescription', style: GoogleFonts.luckiestGuy(fontSize: 15)),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      //THE FART GUN
+                      Container(
+                        height: MediaQuery.of(context).size.height * 0.4,
+                        width: MediaQuery.of(context).size.width * 0.3,
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            // 1. The "Gun" Visual (Placeholder)
+                            Image.asset(
+                              fartGunImagePath, // Generic toy gun icon
+                              height: 120,
+                              // color: Colors.white,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Icon(Icons.toys, size: 100, color: Colors.white),
+                            ),
+
+                            // 2. Mode Switcher (Fart vs Burp)
+
+                            // Trigger Counter Text
+                            Text(
+                              "Triggers: ${10 - triggerCount}",
+                              style: GoogleFonts.robotoMono(color: Colors.white70, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // 3. The Wacky Trigger Button
+                      PressableRedButton(size: 120, onPressed: _triggerSound),
+                    ],
+                  ),
+
+                  // --- BANNER AD PLACEHOLDER ---
+                ],
+              ),
+            ),
+          ),
+        ),
+        bottomNavigationBar: FloatingActionButton(
+          onPressed: () {},
+          child: Container(
+            height: 60,
+            //width: 150,
+            color: Colors.black,
+            child: const Center(
+              child: Text(
+                "BANNER AD SPACE",
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
             ),
           ),
         ),

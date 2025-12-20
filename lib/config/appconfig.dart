@@ -43,7 +43,10 @@ class AppConfig {
       //Registering instance of DataManager to store data
       await localStorageService.init();
       GetIt.I.registerSingleton<LocalStorageService>(localStorageService);
-      GetIt.I.registerSingleton<AppRemoteConfig>(AppRemoteConfig());
+      final appRemoteConfig = AppRemoteConfig();
+      await appRemoteConfig.init();
+      GetIt.I.registerSingleton<AppRemoteConfig>(appRemoteConfig);
+
       final remoteConfig = FirebaseRemoteConfig.instance;
     } else {
       AppLogger().logger.e('Platform not found, check app_config.dart');
