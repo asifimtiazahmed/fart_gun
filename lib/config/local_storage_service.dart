@@ -24,8 +24,9 @@ class LocalStorageService {
     await _prefs?.setString(key, value);
   }
 
-  int getInt(String key, {int defaultValue = 0}) {
-    return _prefs?.getInt(key) ?? defaultValue;
+  ///will send null
+  int? getInt(String key, {int defaultValue = 0}) {
+    return _prefs?.getInt(key);
   }
 
   Future<void> setInt(String key, int value) async {

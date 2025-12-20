@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +11,7 @@ import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../firebase_options.dart';
+import 'ad_serve_manager.dart';
 import 'app_remote_config.dart';
 import 'local_storage_service.dart';
 import 'log_manager.dart';
@@ -46,8 +46,7 @@ class AppConfig {
       final appRemoteConfig = AppRemoteConfig();
       await appRemoteConfig.init();
       GetIt.I.registerSingleton<AppRemoteConfig>(appRemoteConfig);
-
-      final remoteConfig = FirebaseRemoteConfig.instance;
+      await AdServeManager.instance.init();
     } else {
       AppLogger().logger.e('Platform not found, check app_config.dart');
     }

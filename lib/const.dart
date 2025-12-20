@@ -36,3 +36,8 @@ final BoxShadow shadow2 = BoxShadow(
   //blurRadius: 5.0,
   //spreadRadius: 1.0,
 );
+
+final String androidBannerAdId = 'ca-app-pub-9426901076429008/8743153501';
+final String androidInterstitialAdId = 'ca-app-pub-9426901076429008/5718369060';
+final String iosBannerAdId = 'ca-app-pub-9426901076429008/2692750479';
+final String iosInterstitialAdId = 'ca-app-pub-9426901076429008/7046928451';

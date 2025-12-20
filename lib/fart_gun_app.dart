@@ -1,18 +1,21 @@
-import 'dart:developer' as AppLogger;
+import 'dart:developer' as app_logger;
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:fart_gun/config/ad_banner.dart';
 import 'package:fart_gun/const.dart';
 import 'package:fart_gun/widgets/denim/denim_background.dart';
 import 'package:fart_gun/widgets/denim/denim_stitched_border.dart';
 import 'package:fart_gun/widgets/denim/stitched_container.dart';
 import 'package:fart_gun/widgets/gun_widget.dart';
 import 'package:fart_gun/widgets/knob_selector.dart';
-import 'package:fart_gun/widgets/red_button/pressableRedButton.dart';
+import 'package:fart_gun/widgets/red_button/pressable_red_button.dart';
 import 'package:fart_gun/widgets/sound_type_button.dart';
 import 'package:fart_gun/widgets/update_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vibration/vibration.dart';
 
+import 'config/ad_serve_manager.dart';
 import 'config/local_storage_service.dart';
 
 class FartGunHome extends StatefulWidget {
@@ -26,11 +29,11 @@ class _FartGunHomeState extends State<FartGunHome> with SingleTickerProviderStat
   // Logic State
   bool isFartMode = true; // true = Fart, false = Burp
   int triggerCount = 0;
-  String selectedFartSound = 'farts/fart1.mp3';
-  String selectedBurpSound = 'burps/burp1.mp3';
+  String selectedFartSound = '';
+  String selectedBurpSound = '';
   late AudioPlayer player = AudioPlayer();
-  int fartKnobValue = 1;
-  int burpKnobValue = 1;
+  static int fartKnobValue = 1;
+  static int burpKnobValue = 1;
   String fartDescription = '- not selected -';
   String burpDescription = ' - not selected  -';
   LocalStorageService localStorageService = LocalStorageService();
@@ -44,12 +47,14 @@ class _FartGunHomeState extends State<FartGunHome> with SingleTickerProviderStat
   @override
   void initState() {
     super.initState();
+    fartKnobValue = 1;
+    burpKnobValue = 1;
     init();
     try {
-      fartKnobValue = localStorageService.getInt(fartKnobValueKey);
-      burpKnobValue = localStorageService.getInt(burpKnobValueKey);
+      fartKnobValue = localStorageService.getInt(fartKnobValueKey) ?? 1;
+      burpKnobValue = localStorageService.getInt(burpKnobValueKey) ?? 1;
     } catch (e) {
-      AppLogger.log(e.toString());
+      app_logger.log(e.toString());
     }
     player = AudioPlayer();
     _controller =
@@ -68,8 +73,9 @@ class _FartGunHomeState extends State<FartGunHome> with SingleTickerProviderStat
 
   void init() {
     setState(() {
-      getBurpDescription(burpKnobValue);
-      getFartDescription(fartKnobValue);
+      burpDescription = getBurpDescription(burpKnobValue);
+      fartDescription = getFartDescription(fartKnobValue);
+
       selectedFartSound = 'farts/fart$fartKnobValue.mp3';
       selectedBurpSound = 'burps/burp$burpKnobValue.mp3';
     });
@@ -148,66 +154,48 @@ class _FartGunHomeState extends State<FartGunHome> with SingleTickerProviderStat
     return desc;
   }
 
-  void _triggerSound() async {
-    //Button tap sound
-    await player.play(AssetSource(tapSoundPath));
+  void _gunTriggerAction() async {
+    // Haptic feedback
+    final hasVibrator = await Vibration.hasVibrator();
+    if (hasVibrator == true) {
+      Vibration.vibrate(duration: 50);
+    }
+
     // 1. Animate Button
     await _controller.forward();
     await _controller.reverse();
 
-    // 2. Play Sound (Simulated)
-    await Future.delayed(const Duration(milliseconds: 150));
+    // 2. Play Sound
     await player.play(AssetSource(isFartMode ? selectedFartSound : selectedBurpSound));
-    // VISUAL CUE since we don't have real audio files loaded
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          isFartMode ? "💨 PFFFFFFT!" : "🤢 BUUUURP!",
-          textAlign: TextAlign.center,
-          style: GoogleFonts.luckiestGuy(fontSize: 20),
+    
+    // 3. Show visual feedback (check mounted before using context)
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            isFartMode ? "💨 PFFFFFFT!" : "🤢 BUUUURP!",
+            textAlign: TextAlign.center,
+            style: GoogleFonts.luckiestGuy(fontSize: 20),
+          ),
+          duration: const Duration(milliseconds: 500),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
         ),
-        duration: const Duration(milliseconds: 500),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+      );
+    }
 
-    // 3. Handle Ad Logic
+    // 4. Handle Ad Logic
     setState(() {
       triggerCount++;
     });
 
     if (triggerCount % 10 == 0) {
-      _showInterstitialAd();
+      AdServeManager.instance.showInterstitialIfReady();
       setState(() {
         triggerCount = 0;
       });
     }
-  }
-
-  void _showInterstitialAd() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        backgroundColor: Colors.white,
-        title: const Text("ADVERTISEMENT"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              height: 150,
-              color: Colors.grey[300],
-              child: const Center(child: Icon(Icons.movie, size: 50, color: Colors.grey)),
-            ),
-            const SizedBox(height: 10),
-            const Text("This is a simulated Interstitial Ad after 10 triggers."),
-          ],
-        ),
-        actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("CLOSE (X)"))],
-      ),
-    );
   }
 
   // --- Widget Builders ---
@@ -320,11 +308,13 @@ class _FartGunHomeState extends State<FartGunHome> with SingleTickerProviderStat
                                             child: StepKnob(
                                               value: fartKnobValue,
                                               onChanged: (fartSelected) {
-                                                setState(() {
+                                                setState(() async {
                                                   fartKnobValue = fartSelected;
                                                   selectedFartSound = 'farts/fart$fartSelected.mp3';
                                                   fartDescription = getFartDescription(fartSelected);
                                                   localStorageService.setInt(fartKnobValueKey, fartSelected);
+                                                  //Button tap sound
+                                                  await player.play(AssetSource(tapSoundPath));
                                                 });
                                               },
                                             ),
@@ -360,11 +350,13 @@ class _FartGunHomeState extends State<FartGunHome> with SingleTickerProviderStat
                                             child: StepKnob(
                                               value: burpKnobValue,
                                               onChanged: (burpSelected) {
-                                                setState(() {
+                                                setState(() async {
                                                   burpKnobValue = burpSelected;
                                                   selectedBurpSound = 'burps/burp$burpSelected.mp3';
                                                   burpDescription = getBurpDescription(burpSelected);
                                                   localStorageService.setInt(burpKnobValueKey, burpSelected);
+                                                  //Button tap sound
+                                                  await player.play(AssetSource(tapSoundPath));
                                                 });
                                               },
                                             ),
@@ -403,7 +395,7 @@ class _FartGunHomeState extends State<FartGunHome> with SingleTickerProviderStat
                         ),
                       ),
                       // 3. The Wacky Trigger Button
-                      PressableRedButton(size: 120, onPressed: _triggerSound),
+                      PressableRedButton(size: 120, onPressed: _gunTriggerAction),
                     ],
                   ),
 
@@ -419,12 +411,7 @@ class _FartGunHomeState extends State<FartGunHome> with SingleTickerProviderStat
             height: 60,
             //width: 150,
             color: Colors.black,
-            child: const Center(
-              child: Text(
-                "BANNER AD SPACE",
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              ),
-            ),
+            child: const Center(child: AdBanner()),
           ),
         ),
       ),

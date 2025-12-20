@@ -42,16 +42,9 @@ class _DoubleStitchPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final stitchColor = const Color(0xFFFFD54F); // denim yellow
-    final shadowColor = const Color(0xFFB38F2A); // darker thread depth
 
     final stitchPaint = Paint()
       ..color = stitchColor
-      ..strokeWidth = 1.8
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round;
-
-    final shadowPaint = Paint()
-      ..color = shadowColor.withValues(alpha: 0.6)
       ..strokeWidth = 1.8
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
@@ -60,11 +53,8 @@ class _DoubleStitchPainter extends CustomPainter {
     const gapLength = 4.0;
     const rowSpacing = 4.0;
 
-    // Outer & inner stitch paths
-    final outer = _roundedRectPath(size, 0);
+    // Inner stitch path
     final inner = _roundedRectPath(size, rowSpacing);
-
-    // _drawDashedPath(canvas, outer, shadowPaint, dashLength, gapLength); //REMOVED TO TAKE OUTER LAYER OFF
     _drawDashedPath(canvas, inner, stitchPaint, dashLength, gapLength);
   }
 

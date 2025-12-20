@@ -32,6 +32,8 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>GADApplicationIdentifier</key>
+    <string>ca-app-pub-9426901076429008~4133824654</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

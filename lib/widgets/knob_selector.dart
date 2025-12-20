@@ -1,8 +1,7 @@
 import 'dart:math';
 
+import 'package:fart_gun/const.dart';
 import 'package:flutter/material.dart';
-
-import '../const.dart';
 
 class StepKnob extends StatelessWidget {
   final int steps;
