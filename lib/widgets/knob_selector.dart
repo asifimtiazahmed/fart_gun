@@ -72,10 +72,13 @@ class _Tick extends StatelessWidget {
       angle: angle,
       child: Align(
         alignment: Alignment.topCenter,
-        child: Container(
-          width: 10,
-          height: size * 0.1,
-          decoration: BoxDecoration(color: const Color(0xFF5C7882), borderRadius: BorderRadius.circular(6)),
+        child: Transform.translate(
+          offset: Offset(0, -size * 0.1), // push ticks outward
+          child: Container(
+            width: 5,
+            height: size * 0.1,
+            decoration: BoxDecoration(color: const Color(0xFF5C7882), borderRadius: BorderRadius.circular(6)),
+          ),
         ),
       ),
     );

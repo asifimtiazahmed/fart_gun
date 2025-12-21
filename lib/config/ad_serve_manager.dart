@@ -8,6 +8,7 @@ import '../const.dart';
 class AdServeManager {
   AdServeManager._();
   static final AdServeManager instance = AdServeManager._();
+  bool isRelease = true;
 
   InterstitialAd? _interstitial;
   bool _interstitialReady = false;
@@ -38,7 +39,7 @@ class AdServeManager {
   static final _iosInterstitialProd = iosInterstitialAdId;
 
   /// Toggle here OR later via RemoteConfig
-  bool get _useTestAds => true;
+  bool get _useTestAds => isRelease;
 
   String get bannerId {
     if (_useTestAds) {
