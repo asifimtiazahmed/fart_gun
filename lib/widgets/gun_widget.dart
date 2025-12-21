@@ -18,7 +18,7 @@ class _GunWidgetState extends State<GunWidget> with SingleTickerProviderStateMix
   void initState() {
     super.initState();
 
-    _shakeController = AnimationController(vsync: this, duration: const Duration(milliseconds: 350));
+    _shakeController = AnimationController(vsync: this, duration: const Duration(milliseconds: 150));
 
     _shakeAnimation = TweenSequence<double>([
       TweenSequenceItem(tween: Tween(begin: 0, end: -6), weight: 1),
@@ -73,7 +73,11 @@ class _GunWidgetState extends State<GunWidget> with SingleTickerProviderStateMix
                 child: WaveProgressIndicator(
                   value: 1 - (widget.triggerValue / 10),
                   waveHeight: 1,
-                  gradientColors: [brownColor.withValues(alpha: 0.6), stitchColor.withValues(alpha: 0.6)],
+                  gradientColors: [
+                    brownColor.withValues(alpha: 0.6),
+                    greenFartColor.withValues(alpha: 0.7),
+                    stitchColor.withValues(alpha: 0.6),
+                  ],
                 ),
               ),
             ),

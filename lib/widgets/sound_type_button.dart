@@ -1,6 +1,5 @@
 import 'package:fart_gun/const.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class SoundTypeButton extends StatelessWidget {
   final String imagePath;
@@ -35,10 +34,11 @@ class SoundTypeButton extends StatelessWidget {
             padding: const EdgeInsets.only(top: 8.0),
             child: Text(
               buttonText,
-              style: GoogleFonts.luckiestGuy(
+              style: const TextStyle(
+                fontFamily: 'LuckiestGuy',
                 fontSize: 40,
                 color: Colors.white,
-                shadows: [Shadow(offset: const Offset(2, 2), color: Colors.black26, blurRadius: 2)],
+                shadows: [Shadow(offset: Offset(2, 2), color: Colors.black26, blurRadius: 2)],
               ),
             ),
           ),

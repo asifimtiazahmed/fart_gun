@@ -49,7 +49,17 @@ class _PressableRedButtonState extends State<PressableRedButton> with SingleTick
 
           return Transform.translate(
             offset: Offset(0, 6 * press),
-            child: CustomPaint(size: Size.square(widget.size), painter: _RedButtonPainter(press)),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                CustomPaint(size: Size.square(widget.size), painter: _RedButtonPainter(press)),
+                Text(
+                  'Don\'t\nPress Me',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontFamily: 'LuckiestGuy', fontSize: 15, color: Colors.white),
+                ),
+              ],
+            ),
           );
         },
       ),
