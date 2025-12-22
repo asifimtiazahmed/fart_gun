@@ -10,9 +10,9 @@ import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../firebase_options.dart';
 import 'ad_serve_manager.dart';
 import 'app_remote_config.dart';
+import 'firebase_options.dart';
 import 'local_storage_service.dart';
 import 'log_manager.dart';
 
