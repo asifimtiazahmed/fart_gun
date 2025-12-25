@@ -1,14 +1,13 @@
 import 'dart:io';
 
+import 'package:fart_gun/config/log_manager.dart';
+import 'package:fart_gun/const.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-
-import '../config/log_manager.dart';
-import '../const.dart';
 
 class AdServeManager {
   AdServeManager._();
   static final AdServeManager instance = AdServeManager._();
-  bool isRelease = true;
+  bool isDebug = false;
 
   InterstitialAd? _interstitial;
   bool _interstitialReady = false;
@@ -39,19 +38,23 @@ class AdServeManager {
   static final _iosInterstitialProd = iosInterstitialAdId;
 
   /// Toggle here OR later via RemoteConfig
-  bool get _useTestAds => isRelease;
+  bool get _useTestAds => isDebug;
 
   String get bannerId {
     if (_useTestAds) {
+      AppLogger().i('fetching banner test ad');
       return Platform.isAndroid ? _androidBannerTest : _iosBannerTest;
     }
+    AppLogger().i('fetching banner prod ad');
     return Platform.isAndroid ? _androidBannerProd : _iosBannerProd;
   }
 
   String get interstitialId {
     if (_useTestAds) {
+      AppLogger().i('fetching interstitial test ad');
       return Platform.isAndroid ? _androidInterstitialTest : _iosInterstitialTest;
     }
+    AppLogger().i('fetching interstitial prod ad');
     return Platform.isAndroid ? _androidInterstitialProd : _iosInterstitialProd;
   }
 

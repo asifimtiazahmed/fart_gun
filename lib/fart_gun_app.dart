@@ -2,6 +2,7 @@ import 'dart:developer' as app_logger;
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:fart_gun/config/ad_banner.dart';
+import 'package:fart_gun/config/app_remote_config.dart';
 import 'package:fart_gun/const.dart';
 import 'package:fart_gun/widgets/denim/denim_background.dart';
 import 'package:fart_gun/widgets/denim/denim_stitched_border.dart';
@@ -13,6 +14,7 @@ import 'package:fart_gun/widgets/smoke_puff.dart';
 import 'package:fart_gun/widgets/sound_type_button.dart';
 import 'package:fart_gun/widgets/update_banner.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:vibration/vibration.dart';
 
 import 'config/ad_serve_manager.dart';
@@ -38,6 +40,8 @@ class _FartGunHomeState extends State<FartGunHome> with SingleTickerProviderStat
   String fartDescription = '- not selected -';
   String burpDescription = ' - not selected  -';
   LocalStorageService localStorageService = LocalStorageService();
+  String appVersion = '';
+  late final AppRemoteConfig config;
 
   // Animation Controller for the button pop effect
   late AnimationController _controller;
@@ -48,6 +52,8 @@ class _FartGunHomeState extends State<FartGunHome> with SingleTickerProviderStat
   @override
   void initState() {
     super.initState();
+    config = GetIt.I<AppRemoteConfig>();
+    appVersion = config.localAppVersion;
     fartKnobValue = 1;
     burpKnobValue = 1;
     init();
@@ -418,6 +424,13 @@ class _FartGunHomeState extends State<FartGunHome> with SingleTickerProviderStat
                                         child: FartSmokePuff(isActive: triggerSmoke, size: 90),
                                       ),
                                       GunWidget(triggerValue: triggerCount),
+                                      Positioned(
+                                        bottom: -10,
+                                        child: Text(
+                                          'v: $appVersion',
+                                          style: TextStyle(color: Colors.white, fontSize: 12),
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
